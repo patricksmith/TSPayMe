@@ -7,27 +7,61 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
+  Image,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View
 } from 'react-native';
 
-export default class TSPayMe extends Component {
-  render() {
+class WelcomeMessage extends Component {
+  render () {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to React Native!
+          Welcome!
         </Text>
         <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
+          Press to get a random direction
         </Text>
       </View>
-    );
+    );}
+}
+
+const Arrow = ({ direction }) => {
+  return <Image source={require('./images/arrow.png')} style={styles[direction]} />
+}
+
+export default class TSPayMe extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      direction: 'left',
+      showWelcome: true
+    }
+  }
+
+  onPress = (event) => {
+    let direction = 'left'
+    if (Math.round(Math.random())) {
+      direction = 'right'
+    }
+    this.setState({ showWelcome: false, direction })
+  }
+
+  render() {
+    let content
+    if (this.state.showWelcome) {
+      content =  <WelcomeMessage />
+    } else {
+      content = <Arrow direction={this.state.direction} />
+    }
+
+    return (
+      <TouchableOpacity onPress={this.onPress} style={styles.container}>
+        {content}
+      </TouchableOpacity>
+    )
   }
 }
 
@@ -48,6 +82,12 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
+  left: {
+    transform: [{ rotate: '90deg' }]
+  },
+  right: {
+    transform: [{ rotate: '-90deg' }]
+  }
 });
 
 AppRegistry.registerComponent('TSPayMe', () => TSPayMe);
